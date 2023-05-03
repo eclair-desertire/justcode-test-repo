@@ -7,6 +7,13 @@
     <title>Document</title>
 </head>
 <body>
+
     <h1>ПРИВЕТ МИР!!!</h1>
+    {% for i in posts %}
+        <h1>Заголовок: {{i.title}}</h1>
+        <h2>Автор: {{i.user}}</h2>
+        <h3>Дата создания поста: {{i.date_post}}</h3>
+        <p>{{i.text}}</p>
+    {% endfor %}
 </body>
 </html>
