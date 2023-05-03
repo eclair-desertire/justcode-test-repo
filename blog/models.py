@@ -15,4 +15,9 @@ class Post(models.Model):
     def __str__(self) -> str:
         return self.title
 
+class AboutUs(models.Model):
+    pass
+    # TODO Ссылки на whatsapp, telegram URLField
+    # TODO Текст о нас 
+
 # Create your models here.

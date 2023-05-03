@@ -8,5 +8,8 @@ def index(request):
 
 
 def about(request):
+    # AboutUs.objects.last()
+    # AboutUs.objects.get()
+    # AboutUs.objects.filter()
     return render(request,'about.html')
 # Create your views here.
