@@ -1,0 +1,9 @@
+.header{
+    width: 100%;
+    background-color: orange;
+}
+.post{
+    width: 450px;
+    margin: 20px auto;
+    border: 5px solid black;
+}
