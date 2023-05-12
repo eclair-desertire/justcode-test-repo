@@ -3,6 +3,38 @@ from blog.models import Post
 from blog.forms import PostForm
 from django.shortcuts import redirect
 from django.utils import timezone
+from rest_framework_simplejwt.views import (
+    TokenObtainSlidingView,
+    TokenRefreshSlidingView,
+)
+from rest_framework.viewsets import ModelViewSet, GenericViewSet,mixins
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from .serializers import TokenObtainPairSerializer, TokenRefreshSerializer, UserSerializer, GetUserSerializer
+from rest_framework.response import Response
+from rest_framework import status
+from .models import User
+
+
+class TokenObtainPairView(TokenObtainSlidingView):
+    permission_classes=[AllowAny]
+    serializer_class=TokenObtainPairSerializer
+
+class TokenRefreshView(TokenRefreshSlidingView):
+    permission_classes=[AllowAny]
+    serializer_class=TokenRefreshSerializer
+
+class RegisterView(GenericViewSet, mixins.CreateModelMixin):
+    permission_classes=[AllowAny]
+    serializer_class=UserSerializer
+
+class UserView(ModelViewSet):
+    permission_classes=[IsAuthenticated]
+    serializer_class=GetUserSerializer
+    queryset=User.objects.all()
+
+    def get_current_user(self,request,*args,**kwargs):
+        serializer=self.get_serializer(request.user)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 def index(request):
