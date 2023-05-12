@@ -32,7 +32,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         super().save(*args, **kwargs)
 
 class Post(models.Model):
-    user=models.ForeignKey(User,on_delete=models.CASCADE,verbose_name='Пользователь создавший пост', null=True,blank=True)
+    user=models.ForeignKey(User,on_delete=models.CASCADE,verbose_name='Пользователь создавший пост', null=True,blank=True, related_name='posts')
     title=models.CharField(verbose_name='Заголовок',max_length=255,default='',null=True,blank=True)
     text=models.TextField(verbose_name='Описание')
     date_post=models.DateTimeField(default=timezone.now,verbose_name='Дата создания поста')

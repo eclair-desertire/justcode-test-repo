@@ -9,10 +9,18 @@ from rest_framework_simplejwt.views import (
 )
 from rest_framework.viewsets import ModelViewSet, GenericViewSet,mixins
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .serializers import TokenObtainPairSerializer, TokenRefreshSerializer, UserSerializer, GetUserSerializer
+from .serializers import TokenObtainPairSerializer, TokenRefreshSerializer, UserSerializer, GetUserSerializer, PostSerializer
 from rest_framework.response import Response
+from rest_framework.filters import BaseFilterBackend, SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from .models import User
+
+class PostView(ModelViewSet):
+    serializer_class=PostSerializer
+    queryset=Post.objects.all()
+    filter_backends=[DjangoFilterBackend]
+    filterset_fields = ['title', 'text']
 
 
 class TokenObtainPairView(TokenObtainSlidingView):
@@ -58,8 +66,7 @@ def post_form(request):
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            post.author = request.user
-            post.published_date = timezone.now()
+            post.user = request.user
             post.save()
             return redirect('single', pk=post.pk)
     else:
