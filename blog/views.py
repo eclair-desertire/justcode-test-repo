@@ -8,19 +8,36 @@ from rest_framework_simplejwt.views import (
     TokenRefreshSlidingView,
 )
 from rest_framework.viewsets import ModelViewSet, GenericViewSet,mixins
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from .serializers import TokenObtainPairSerializer, TokenRefreshSerializer, UserSerializer, GetUserSerializer, PostSerializer
 from rest_framework.response import Response
 from rest_framework.filters import BaseFilterBackend, SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from .models import User
+from rest_framework import permissions
+from rest_framework.generics import ListAPIView
+from .permissions import IsCourier
+
+
+class CourierView(ListAPIView):
+    permission_classes=[IsCourier] 
+
+    def get(self, request, *args, **kwargs):
+        return Response(data={'success':'Поздравляю вы действительно курьер'}, status=status.HTTP_200_OK)
 
 class PostView(ModelViewSet):
     serializer_class=PostSerializer
     queryset=Post.objects.all()
     filter_backends=[DjangoFilterBackend]
     filterset_fields = ['title', 'text']
+
+    def get_permissions(self):
+        if self.action in ['list','retrieve']:
+            self.permission_classes=[AllowAny]
+        else:
+            self.permission_classes=[IsAdminUser]
+        return super(self.__class__, self).get_permissions()
 
 
 class TokenObtainPairView(TokenObtainSlidingView):
@@ -39,6 +56,9 @@ class UserView(ModelViewSet):
     permission_classes=[IsAuthenticated]
     serializer_class=GetUserSerializer
     queryset=User.objects.all()
+
+    def get_permissions(self):
+        return super().get_permissions()
 
     def get_current_user(self,request,*args,**kwargs):
         serializer=self.get_serializer(request.user)
