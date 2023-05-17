@@ -1,11 +1,13 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import index, about, post_single, post_form, TokenObtainPairView, TokenRefreshView,\
-    RegisterView, UserView, PostView, CourierView
+    RegisterView, UserView, PostView, CourierView, ProductCardView
 
 
 router=DefaultRouter()
 router.register('post',PostView,basename='post')
+router.register('products',ProductCardView, basename='products')
+
 
 urlpatterns=[
     path('token/',TokenObtainPairView.as_view()),
